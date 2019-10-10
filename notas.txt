@@ -1,0 +1,11 @@
+npm init
+  crea el package.json
+
+npm i express
+  instalar express
+
+npm i -D nodemon
+añadir a scripts:
+    "start": "node index",
+    "dev":  "nodemon index"
+para arrancar: npm run dev
