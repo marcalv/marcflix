@@ -219,7 +219,7 @@ function getRSS(infoObj) {
         feed.item({
           title:  path.basename(file),
           description: 'use this for the content. It can include html.',
-          url: HOSTNAME+'/'+torrent.infoHash+'/'+index+'/file'+path.extname(file), // link to the item
+          url: HOSTNAME+'/view/'+torrent.infoHash+'/'+index+'/file'+path.extname(file), // link to the item
         });
       })
     })
