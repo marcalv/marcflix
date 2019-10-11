@@ -18,6 +18,7 @@
     "fs-extra": "^8.1.0",
     "glob": "^7.1.4",
     "request": "^2.88.0",
+    "rss": "^1.2.2",
     "webtorrent": "^0.107.16"
   },
   "devDependencies": {

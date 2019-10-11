@@ -7,6 +7,8 @@ const fs = require('fs-extra');
 const os = require('os');
 const checkDiskSpace = require('check-disk-space')
 const glob = require('glob');
+const RSS = require('rss');
+var xml = require('xml');
 
 
 //Here we are configuring express to use body-parser as middle-ware.
@@ -40,8 +42,26 @@ app.get('/', (req,res) => {
     });   
 })     
 
+//Homepage route
+app.get('/rss', (req,res) => {
+  console.log("Get at /rss")
+  console.log(client.torrents.length)
+  Promise.all([getInfo()]).then(values => { 
+    //res.setHeader('Content-Type', 'application/json');
+    //res.end(JSON.stringify(values[0], null, 3));
+    //console.log(values[0])
+    res.set('Content-Type', 'text/xml');
+    res.end(getRSS(values[0]));
+  });  
+
+  //res.set('Content-Type', 'text/xml');
+  //res.end(getRSS());
+})    
+
+
+
 //Download file route
-app.get('/view/:infoHash/:fileNum', function(req, res){
+app.get('/view/:infoHash/:fileNum/:filename', function(req, res){
   let infoHash = req.params.infoHash
   let fileNum = req.params.fileNum
   let torrentObj = client.get(infoHash)
@@ -80,8 +100,10 @@ const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => console.log(`server started on port ${PORT}`));
 
+const HOSTNAME = process.env.HOSTNAME || 'http://localhost:8000/';
+
 console.log("======================================")
-//addTorrent(exampleMagnetURI)
+addTorrent(exampleMagnetURI)
 //addTorrent("magnet:?xt=urn:btih:04AF2550620D2322A01E1485F1A80B1A956EFB72&dn=%5Bzooqle.com%5D%20Game%20of%20Thrones%20S08E06%201080p%20WEB%20H264-MEMENTO%5Bettv%5D&tr=http://explodie.org:6969/announce&tr=http://announce.xxx-tracker.com:2710/announce&tr=http://tracker1.itzmx.com:8080/announce&tr=http://open.acgtracker.com:1096/announce&tr=https://bigfoot1942.sektori.org/announce&xl=4690910194&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=http%3A%2F%2Fexplodie.org%3A6969%2Fannounce&tr=http%3A%2F%2Ftracker1.itzmx.com%3A8080%2Fannounce&tr=http%3A%2F%2Fannounce.xxx-tracker.com%3A2710%2Fannounce")
 
 
@@ -178,7 +200,37 @@ function addTorrent(magnetURI){
 } 
 
 
-
-
-
 function formatBytes(a,b){if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]}
+
+
+ 
+function getRSS(infoObj) {
+  console.log(infoObj)
+  /* lets create an rss feed */
+  var feed = new RSS({
+      title: 'title',
+      description: 'description',
+      feed_url: 'http://example.com/rss.xml',
+      site_url: 'http://example.com'})
+   
+  /* loop over data and add to feed */
+    infoObj.torrentsInfo.forEach((torrent)=>{
+      torrent.files.forEach((file,index)=>{
+        feed.item({
+          title:  path.basename(file),
+          description: 'use this for the content. It can include html.',
+          url: HOSTNAME+'/'+torrent.infoHash+'/'+index+'/file'+path.extname(file), // link to the item
+        });
+      })
+    })
+  
+
+    feed.item({
+      title:  'item title',
+      description: 'use this for the content. It can include html.',
+      url: 'http://techslides.com/demos/sample-videos/small.mp4', // link to the item
+  });
+  
+// cache the xml to send to clients
+return feed.xml();
+}
