@@ -71,6 +71,10 @@ app.get('/view/:infoHash/:fileNum/:filename', function(req, res){
   
  }); 
 
+ app.get('/ui', function (req, res) {
+  res.sendFile(path.join(__dirname,'index.html'))
+});
+
 //Add Torrent route
 app.post('/add', (req,res) => {
   console.log("Post at /add, magnet: "+req.body.magnet)
@@ -100,10 +104,10 @@ const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => console.log(`server started on port ${PORT}`));
 
-const HOSTNAME = process.env.HOSTNAME || 'http://localhost:8000/';
+const HOSTNAME = process.env.HOSTNAME || 'http://localhost:8000';
 
 console.log("======================================")
-addTorrent(exampleMagnetURI)
+//addTorrent(exampleMagnetURI)
 //addTorrent("magnet:?xt=urn:btih:04AF2550620D2322A01E1485F1A80B1A956EFB72&dn=%5Bzooqle.com%5D%20Game%20of%20Thrones%20S08E06%201080p%20WEB%20H264-MEMENTO%5Bettv%5D&tr=http://explodie.org:6969/announce&tr=http://announce.xxx-tracker.com:2710/announce&tr=http://tracker1.itzmx.com:8080/announce&tr=http://open.acgtracker.com:1096/announce&tr=https://bigfoot1942.sektori.org/announce&xl=4690910194&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=http%3A%2F%2Fexplodie.org%3A6969%2Fannounce&tr=http%3A%2F%2Ftracker1.itzmx.com%3A8080%2Fannounce&tr=http%3A%2F%2Fannounce.xxx-tracker.com%3A2710%2Fannounce")
 
 
@@ -188,15 +192,22 @@ function createTorrentDir(){
 
 
 function addTorrent(magnetURI){
-
-  client.add(magnetURI, { path: torrentDir }, function (torrent) {
-    torrent.on('done', function () {
-      console.log('torrent download finished')
-      })
-
-    console.log("Added Torrent: "+torrent.name)
-
-  }) 
+  try {
+    client.add(magnetURI, { path: torrentDir }, function (torrent) {
+      torrent.on('done', function () {
+        console.log('torrent download finished')
+        })
+  
+      console.log("Added Torrent: "+torrent.name)
+  
+    }) 
+  }
+  catch (e) {
+    console.log("entering catch block");
+    console.log(e);
+    console.log("leaving catch block"); ç
+  }
+  
 } 
 
 
