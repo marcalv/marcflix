@@ -30,10 +30,10 @@ var client = new WebTorrent()
 var exampleMagnetURI = "magnet:?xt=urn:btih:f59f3e4b2eb8be6e96148667ebbcc53343a13dc3&dn=The.Simpsons.S31E02.1080p.WEB.x264-TBS[rarbg]&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Feddie4.nl%3A6969&tr=udp%3A%2F%2Ftracker.pirateparty.gr%3A6969&tr=udp%3A%2F%2Fopentrackr.org%3A1337&tr=udp%3A%2F%2Ftracker.zer0day.to%3A1337"
 
 
-
+//addTorrent(exampleMagnetURI)
 
 //Homepage route
-app.get('/', (req,res) => {
+app.get('/api/info', (req,res) => {
     console.log("Get at /")
     console.log(client.torrents.length)
 
@@ -59,14 +59,12 @@ app.get('/list', (req,res) => {
 
   });  
 
-  //res.set('Content-Type', 'text/xml');
-  //res.end(getRSS());
 })    
 
 
 
 //Download file route
-app.get('/view/:infoHash/:fileNum/:filename', function(req, res){
+app.get('/api/:infoHash/:fileNum/:filename', function(req, res){
   let infoHash = req.params.infoHash
   let fileNum = req.params.fileNum
   let torrentObj = client.get(infoHash)
@@ -76,29 +74,22 @@ app.get('/view/:infoHash/:fileNum/:filename', function(req, res){
   
  }); 
 
- app.get('/ui', function (req, res) {
+ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname,'index.html'))
 });
 
 //Add Torrent route
-app.post('/add', (req,res) => {
+app.post('/api/add', (req,res) => {
   console.log("Post at /add, magnet: "+req.body.magnet)
   var magnetURI = req.body.magnet
   addTorrent(magnetURI)
   //response
-  res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify({ response: 'ok' }, null, 3));
+  res.redirect('/')
+  //res.setHeader('Content-Type', 'application/json');
+  //res.end(JSON.stringify({ response: 'ok' }, null, 3));
 })
 
-//Download
-app.post('/donwload/', (req,res) => {
-  console.log("Post at /add, magnet: "+req.body.magnet)
-  var magnetURI = req.body.magnet
-  addTorrent(magnetURI)
-  //response
-  res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify({ response: 'ok' }, null, 3));
-})
+
 
 //Set static folder
 app.use(express.static(path.join(__dirname,'public'))) 
@@ -109,10 +100,10 @@ const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => console.log(`server started on port ${PORT}`));
 
-const HOSTNAME = process.env.HOSTNAME || 'http://localhost:8000';
+const HOSTNAME = process.env.HOSTNAME || 'http://miair.lan:8000';
 
 console.log("======================================")
-//addTorrent(exampleMagnetURI)
+
 //addTorrent("magnet:?xt=urn:btih:04AF2550620D2322A01E1485F1A80B1A956EFB72&dn=%5Bzooqle.com%5D%20Game%20of%20Thrones%20S08E06%201080p%20WEB%20H264-MEMENTO%5Bettv%5D&tr=http://explodie.org:6969/announce&tr=http://announce.xxx-tracker.com:2710/announce&tr=http://tracker1.itzmx.com:8080/announce&tr=http://open.acgtracker.com:1096/announce&tr=https://bigfoot1942.sektori.org/announce&xl=4690910194&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=http%3A%2F%2Fexplodie.org%3A6969%2Fannounce&tr=http%3A%2F%2Ftracker1.itzmx.com%3A8080%2Fannounce&tr=http%3A%2F%2Fannounce.xxx-tracker.com%3A2710%2Fannounce")
 
 
@@ -173,6 +164,8 @@ function getInfo() {
       infoObj.freeSpaceDisk = values[0]
       infoObj.torrentsInfo = getTorrents()
       infoObj.files = values[1]
+      infoObj.links = makeLinks(infoObj.torrentsInfo)
+      console.log(infoObj.links)
       resolve(infoObj)
     });  
 });
@@ -230,7 +223,7 @@ function getRSS(infoObj) {
         if (isVideo(path.basename(file))){
           line = '#EXTINF:-1, '+path.basename(file)+'\n'
           m3u8Content=m3u8Content.concat(line)
-          line = HOSTNAME+'/view/'+torrent.infoHash+'/'+index+'/file'+path.extname(file)+'\n'
+          line = HOSTNAME+'/api/'+torrent.infoHash+'/'+index+'/file'+path.extname(file)+'\n'
           m3u8Content=m3u8Content.concat(line)
         }
         
@@ -238,6 +231,26 @@ function getRSS(infoObj) {
     })
 
   return m3u8Content
+}
 
+
+function makeLinks(torrentsInfo){
+  let filesObj = []
+  let fileObj = {}
+  torrentsInfo.forEach((torrent)=>{
+    torrent.files.forEach((file,index)=>{
+      if (isVideo(path.basename(file))){
+        fileObj = 
+          { name: path.basename(file),
+            url: HOSTNAME+'/api/'+torrent.infoHash+'/'+index+'/file'+path.extname(file)
+          }
+          filesObj.push(fileObj)
+      }
+      
+      
+    })
     
+  })
+  return filesObj
+
 }
