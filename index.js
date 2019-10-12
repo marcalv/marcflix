@@ -9,6 +9,7 @@ const checkDiskSpace = require('check-disk-space')
 const glob = require('glob');
 const RSS = require('rss');
 var xml = require('xml');
+var isVideo = require('is-video');
 
 
 //Here we are configuring express to use body-parser as middle-ware.
@@ -43,15 +44,19 @@ app.get('/', (req,res) => {
 })     
 
 //Homepage route
-app.get('/rss', (req,res) => {
-  console.log("Get at /rss")
+app.get('/list', (req,res) => {
+  console.log("Get at /list")
   console.log(client.torrents.length)
   Promise.all([getInfo()]).then(values => { 
     //res.setHeader('Content-Type', 'application/json');
     //res.end(JSON.stringify(values[0], null, 3));
     //console.log(values[0])
-    res.set('Content-Type', 'text/xml');
-    res.end(getRSS(values[0]));
+    //res.set('Content-Type', 'text/xml');
+    var text=getRSS(values[0]);
+    res.setHeader('Content-type', "application/octet-stream");
+    res.setHeader('Content-disposition', 'attachment; filename=list.m3u8');
+    res.send(text);
+
   });  
 
   //res.set('Content-Type', 'text/xml');
@@ -216,32 +221,23 @@ function formatBytes(a,b){if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","
 
  
 function getRSS(infoObj) {
-  console.log(infoObj)
   /* lets create an rss feed */
-  var feed = new RSS({
-      title: 'title',
-      description: 'description',
-      feed_url: 'http://example.com/rss.xml',
-      site_url: 'http://example.com'})
-   
+  let m3u8Content = ''
+  let line = ''
   /* loop over data and add to feed */
     infoObj.torrentsInfo.forEach((torrent)=>{
       torrent.files.forEach((file,index)=>{
-        feed.item({
-          title:  path.basename(file),
-          description: 'use this for the content. It can include html.',
-          url: HOSTNAME+'/view/'+torrent.infoHash+'/'+index+'/file'+path.extname(file), // link to the item
-        });
+        if (isVideo(path.basename(file))){
+          line = '#EXTINF:-1, '+path.basename(file)+'\n'
+          m3u8Content=m3u8Content.concat(line)
+          line = HOSTNAME+'/view/'+torrent.infoHash+'/'+index+'/file'+path.extname(file)+'\n'
+          m3u8Content=m3u8Content.concat(line)
+        }
+        
       })
     })
-  
 
-    feed.item({
-      title:  'item title',
-      description: 'use this for the content. It can include html.',
-      url: 'http://techslides.com/demos/sample-videos/small.mp4', // link to the item
-  });
-  
-// cache the xml to send to clients
-return feed.xml();
+  return m3u8Content
+
+    
 }
