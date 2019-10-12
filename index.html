@@ -23,12 +23,17 @@
         <!-- CONTENT -->
     </ul>
 
-    <h3>Android - Files</h3>
+    <h3>Descargar</h3>
+    <ul class="" id="filedownload">
+            <!-- CONTENT -->
+    </ul>
+
+    <h3>Ver en Android</h3>
     <ul class="" id="filediv">
             <!-- CONTENT -->
     </ul>
 
-    <h3>iPhone - Files</h3>
+    <h3>Ver en iPhone</h3>
     <ul class="" id="filedivios">
             <!-- CONTENT -->
     </ul>
@@ -61,6 +66,12 @@ const FileItemIos = ({ file }) => `
     </li>
 `;
 
+const FileItemDownload = ({ file }) => `
+    <li class="">
+            <a href="${file.url}">${file.name}</a>
+    </li>
+`;
+
 
 $.getJSON('/api/info', function(data){
                     console.log('Received data')
@@ -83,6 +94,12 @@ $.getJSON('/api/info', function(data){
                         console.log(file.name)
                         itemBlock = FileItemIos({ file: file})
                         $('#filedivios').append(itemBlock)
+                    });
+
+                    data.links.forEach((file)=>{
+                        console.log(file.name)
+                        itemBlock = FileItemDownload({ file: file})
+                        $('#filedownload').append(itemBlock)
                     });
                     
                  });
