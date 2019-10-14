@@ -8,36 +8,42 @@
     src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
     crossorigin="anonymous"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 </head>
  
 <body>
-    <h1>My Torrents</h1>
-    <form action="/api/add" method="post">
-        magnet: <input type="text" name="magnet">
-        <input type="submit" value="Submit">
-      </form> 
-
-    <h3>Torrents</h3>
-    <ul class="" id="torrentdiv">
-        <!-- CONTENT -->
-    </ul>
-
-    <h3>Descargar</h3>
-    <ul class="" id="filedownload">
+    <div class="container-fluid">
+        <h1>Mis torrents</h1>
+        <h6>que cutre es esta web</h6>
+        
+            <form action="/api/add" method="post">
+                <div class="form-group"></div>
+                magnet: <input type="text" name="magnet">
+                <input type="submit" value="Submit">
+            
+        </div>
+    </form> 
+        <h3>Torrents</h3>
+        <ul class="" id="torrentdiv">
             <!-- CONTENT -->
-    </ul>
+        </ul>
 
-    <h3>Ver en Android</h3>
-    <ul class="" id="filediv">
-            <!-- CONTENT -->
-    </ul>
+        <h3>Descargar</h3>
+        <ul class="" id="filedownload">
+                <!-- CONTENT -->
+        </ul>
 
-    <h3>Ver en iPhone</h3>
-    <ul class="" id="filedivios">
-            <!-- CONTENT -->
-    </ul>
+        <h3>Ver en Android</h3>
+        <ul class="" id="filediv">
+                <!-- CONTENT -->
+        </ul>
 
+        <h3>Ver en iPhone</h3>
+        <ul class="" id="filedivios">
+                <!-- CONTENT -->
+        </ul>
+    </div>
 
 
 
