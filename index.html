@@ -2,6 +2,7 @@
 <html lang="en">
  
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Torrents</title>
     <!-- jQuery -->
     <script
@@ -13,16 +14,18 @@
 </head>
  
 <body>
-    <div class="container-fluid">
+    <div class="container">
         <h1>Mis torrents</h1>
         <h6>que cutre es esta web</h6>
         
             <form action="/api/add" method="post">
-                <div class="form-group"></div>
+                <div class="form-group">
+
+                
                 magnet: <input type="text" name="magnet">
                 <input type="submit" value="Submit">
             
-        </div>
+                </div>
     </form> 
         <h3>Torrents</h3>
         <ul class="" id="torrentdiv">
