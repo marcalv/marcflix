@@ -22,15 +22,15 @@ app.set('view engine', 'handlebars');
 
 //Torrent
 var torrentDir = ''
-createTorrentDir()
-//torrentDir = path.join(__dirname,'torrents')
+//createTorrentDir()
+torrentDir = path.join(__dirname,'torrents')
 
 var WebTorrent = require('webtorrent')
 var client = new WebTorrent()
 var exampleMagnetURI = "magnet:?xt=urn:btih:f59f3e4b2eb8be6e96148667ebbcc53343a13dc3&dn=The.Simpsons.S31E02.1080p.WEB.x264-TBS[rarbg]&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Feddie4.nl%3A6969&tr=udp%3A%2F%2Ftracker.pirateparty.gr%3A6969&tr=udp%3A%2F%2Fopentrackr.org%3A1337&tr=udp%3A%2F%2Ftracker.zer0day.to%3A1337"
 
 
-//addTorrent(exampleMagnetURI)
+addTorrent(exampleMagnetURI)
 
 //Homepage route
 app.get('/api/info', (req,res) => {
