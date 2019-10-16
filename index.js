@@ -10,7 +10,7 @@ const glob = require('glob');
 const RSS = require('rss');
 var xml = require('xml');
 var isVideo = require('is-video');
-
+const parseTorrent = require('parse-torrent')
 
 //Here we are configuring express to use body-parser as middle-ware.
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -190,23 +190,29 @@ function createTorrentDir(){
 
 
 function addTorrent(magnetURI){
-  try {
+  try{
+    console.log(parseTorrent(magnetURI))
+
+
     client.add(magnetURI, { path: torrentDir }, function (torrent) {
       torrent.on('done', function () {
         console.log('torrent download finished')
         })
+
+        torrent.on('error', (err) => {
+          console.log(err)
+        })
+      })
+    }
+ 
+  catch (e){console.log(e)}
+}
   
-      console.log("Added Torrent: "+torrent.name)
+      
+
+    
   
-    }) 
-  }
-  catch (e) {
-    console.log("entering catch block");
-    console.log(e);
-    console.log("leaving catch block"); ç
-  }
   
-} 
 
 
 function formatBytes(a,b){if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]}
