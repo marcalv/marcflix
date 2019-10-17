@@ -22,8 +22,8 @@ app.set('view engine', 'handlebars');
 
 //Torrent
 var torrentDir = ''
-//createTorrentDir()
-torrentDir = path.join(__dirname,'torrents')
+createTorrentDir()
+//torrentDir = path.join(__dirname,'torrents')
 
 var WebTorrent = require('webtorrent')
 var client = new WebTorrent()
