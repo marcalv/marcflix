@@ -22,8 +22,8 @@ app.set('view engine', 'handlebars');
 
 //Torrent
 var torrentDir = ''
-createTorrentDir()
-//torrentDir = path.join(__dirname,'torrents')
+//createTorrentDir()
+torrentDir = path.join(__dirname,'torrents')
 
 var WebTorrent = require('webtorrent')
 var client = new WebTorrent()
@@ -35,7 +35,6 @@ var exampleMagnetURI = "magnet:?xt=urn:btih:f59f3e4b2eb8be6e96148667ebbcc53343a1
 //Homepage route
 app.get('/api/info', (req,res) => {
     console.log("Get at /")
-    console.log(client.torrents.length)
 
     Promise.all([getInfo()]).then(values => { 
       res.setHeader('Content-Type', 'application/json');
@@ -46,7 +45,6 @@ app.get('/api/info', (req,res) => {
 //Homepage route
 app.get('/list', (req,res) => {
   console.log("Get at /list")
-  console.log(client.torrents.length)
   Promise.all([getInfo()]).then(values => { 
     //res.setHeader('Content-Type', 'application/json');
     //res.end(JSON.stringify(values[0], null, 3));
@@ -65,16 +63,17 @@ app.get('/list', (req,res) => {
 
 //Download file route
 app.get('/api/:infoHash/:fileNum/:filename', function(req, res){
+  console.log("Get at /api/DOWNLOAD")
   let infoHash = req.params.infoHash
   let fileNum = req.params.fileNum
   let torrentObj = client.get(infoHash)
   let mypath = path.join(torrentObj.path,torrentObj.files[fileNum].path)
-  console.log(path.join(__dirname,'index.js'))
   res.sendFile(mypath)
   
  }); 
 
  app.get('/', function (req, res) {
+  console.log("Get at /")
   res.sendFile(path.join(__dirname,'index.html'))
 });
 
@@ -165,7 +164,6 @@ function getInfo() {
       infoObj.torrentsInfo = getTorrents()
       infoObj.files = values[1]
       infoObj.links = makeLinks(infoObj.torrentsInfo)
-      console.log(infoObj.links)
       resolve(infoObj)
     });  
 });
@@ -191,7 +189,7 @@ function createTorrentDir(){
 
 function addTorrent(magnetURI){
   try{
-    console.log(parseTorrent(magnetURI))
+    parseTorrent(magnetURI)
 
 
     client.add(magnetURI, { path: torrentDir }, function (torrent) {
