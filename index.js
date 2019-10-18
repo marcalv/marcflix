@@ -15,7 +15,7 @@ const parseTorrent = require('parse-torrent')
 
 //Here we are configuring express to use body-parser as middle-ware.
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+var jsonParser = bodyParser.json();
 
 //Handlebars middleware
 app.engine('handlebars', exphbs({defaultLayout:'main'}));
@@ -36,10 +36,11 @@ const keyboard = Markup.inlineKeyboard([
 
 
 
-const bot = new Telegraf('975230773:AAGLCmIVgZWzEItFoLrkF_9eV5-ZFz4Qlio')
+const bot = new Telegraf('907510217:AAE1ST2jZ2NDQo0t8Y8Uv5qbVP2CDSroGx8')
+//907510217:AAE1ST2jZ2NDQo0t8Y8Uv5qbVP2CDSroGx8
+//975230773:AAGLCmIVgZWzEItFoLrkF_9eV5-ZFz4Qlio
 app.use(bot.webhookCallback('/secret-path'))
 bot.telegram.setWebhook('https://tormarc.herokuapp.com/secret-path')
-
 //bot.start((ctx) => ctx.reply('Hello'))
 //bot.help((ctx) => ctx.reply('Help message'))
 bot.on('message', (ctx) => {
