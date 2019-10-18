@@ -23,7 +23,7 @@ app.set('view engine', 'handlebars');
 
 
 //TELEGRAM BOT
-app.use(bot.webhookCallback('/secret-path'))
+
 
 
 const Telegraf = require('telegraf')
@@ -37,7 +37,9 @@ const keyboard = Markup.inlineKeyboard([
 
 
 const bot = new Telegraf('975230773:AAGLCmIVgZWzEItFoLrkF_9eV5-ZFz4Qlio')
+
 bot.telegram.setWebhook('https://tormarc.herokuapp.com/secret-path')
+app.use(bot.webhookCallback('/secret-path'))
 //bot.start((ctx) => ctx.reply('Hello'))
 //bot.help((ctx) => ctx.reply('Help message'))
 bot.on('message', (ctx) => {
