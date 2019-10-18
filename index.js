@@ -12,6 +12,7 @@ var xml = require('xml');
 var isVideo = require('is-video');
 const parseTorrent = require('parse-torrent')
 
+
 //Here we are configuring express to use body-parser as middle-ware.
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -19,6 +20,45 @@ app.use(bodyParser.json());
 //Handlebars middleware
 app.engine('handlebars', exphbs({defaultLayout:'main'}));
 app.set('view engine', 'handlebars');
+
+
+//TELEGRAM BOT
+app.use(bot.webhookCallback('/secret-path'))
+bot.telegram.setWebhook('https://tormarc.herokuapp.com/secret-path')
+
+const Telegraf = require('telegraf')
+const Extra = require('telegraf/extra')
+const Markup = require('telegraf/markup')
+
+const keyboard = Markup.inlineKeyboard([
+  Markup.urlButton('Open MarcFlix', 'https://tormarc.herokuapp.com'),
+])
+
+
+
+const bot = new Telegraf('975230773:AAGLCmIVgZWzEItFoLrkF_9eV5-ZFz4Qlio')
+//bot.start((ctx) => ctx.reply('Hello'))
+//bot.help((ctx) => ctx.reply('Help message'))
+bot.on('message', (ctx) => {
+  console.log('Message from '+ctx.message.from.username+' '+ctx.message.from.id)
+
+  if (ctx.message.from.id == '6663869'){
+    if (ctx.message.text.match(/magnet:\?xt=urn:[a-z0-9]+:[a-z0-9]{32}/i) != null){
+      console.log('is magnet')
+      ctx.reply('Adding magnet',Extra.markup(keyboard))
+      addTorrent(ctx.message.text)
+    }else{
+      console.log('not magnet')
+      ctx.reply('not magnet')
+    }
+  }
+
+  
+  
+  })
+bot.launch()
+
+//ENDING -------- TELEGRAM BOT
 
 //Torrent
 var torrentDir = ''
@@ -260,32 +300,3 @@ function makeLinks(torrentsInfo){
 }
 
 
-const Telegraf = require('telegraf')
-const Extra = require('telegraf/extra')
-const Markup = require('telegraf/markup')
-
-const keyboard = Markup.inlineKeyboard([
-  Markup.urlButton('Open MarcFlix', 'https://tormarc.herokuapp.com'),
-])
-
-const bot = new Telegraf('975230773:AAGLCmIVgZWzEItFoLrkF_9eV5-ZFz4Qlio')
-//bot.start((ctx) => ctx.reply('Hello'))
-//bot.help((ctx) => ctx.reply('Help message'))
-bot.on('message', (ctx) => {
-  console.log('Message from '+ctx.message.from.username+' '+ctx.message.from.id)
-
-  if (ctx.message.from.id == '6663869'){
-    if (ctx.message.text.match(/magnet:\?xt=urn:[a-z0-9]+:[a-z0-9]{32}/i) != null){
-      console.log('is magnet')
-      ctx.reply('Adding magnet',Extra.markup(keyboard))
-      addTorrent(ctx.message.text)
-    }else{
-      console.log('not magnet')
-      ctx.reply('not magnet')
-    }
-  }
-
-  
-  
-  })
-bot.launch()
