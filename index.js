@@ -269,18 +269,23 @@ const keyboard = Markup.inlineKeyboard([
 ])
 
 const bot = new Telegraf('975230773:AAGLCmIVgZWzEItFoLrkF_9eV5-ZFz4Qlio')
-bot.start((ctx) => ctx.reply('Hello'))
-bot.help((ctx) => ctx.reply('Help message'))
+//bot.start((ctx) => ctx.reply('Hello'))
+//bot.help((ctx) => ctx.reply('Help message'))
 bot.on('message', (ctx) => {
   console.log('Message from '+ctx.message.from.username+' '+ctx.message.from.id)
-  if (ctx.message.text.match(/magnet:\?xt=urn:[a-z0-9]+:[a-z0-9]{32}/i) != null){
-    console.log('is magnet')
-    ctx.reply('Adding magnet',Extra.markup(keyboard))
-    addTorrent(ctx.message.text)
-  }else{
-    console.log('not magnet')
-    ctx.reply('not magnet')
+
+  if (ctx.message.from.id == '6663869'){
+    if (ctx.message.text.match(/magnet:\?xt=urn:[a-z0-9]+:[a-z0-9]{32}/i) != null){
+      console.log('is magnet')
+      ctx.reply('Adding magnet',Extra.markup(keyboard))
+      addTorrent(ctx.message.text)
+    }else{
+      console.log('not magnet')
+      ctx.reply('not magnet')
+    }
   }
+
+  
   
   })
 bot.launch()
