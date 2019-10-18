@@ -21,6 +21,7 @@
     "parse-torrent": "^7.0.1",
     "request": "^2.88.0",
     "rss": "^1.2.2",
+    "telegraf": "^3.33.0",
     "webtorrent": "^0.107.16"
   },
   "devDependencies": {
