@@ -14,7 +14,8 @@ const parseTorrent = require('parse-torrent')
 
 
 //Here we are configuring express to use body-parser as middle-ware.
-app.use(bodyParser.urlencoded({ extended: false }));
+//app.use(bodyParser.urlencoded({ extended: false }));
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 var jsonParser = bodyParser.json();
 
 //Handlebars middleware
@@ -36,7 +37,7 @@ const keyboard = Markup.inlineKeyboard([
 
 
 
-const bot = new Telegraf('907510217:AAE1ST2jZ2NDQo0t8Y8Uv5qbVP2CDSroGx8')
+const bot = new Telegraf('975230773:AAGLCmIVgZWzEItFoLrkF_9eV5-ZFz4Qlio')
 //907510217:AAE1ST2jZ2NDQo0t8Y8Uv5qbVP2CDSroGx8
 //975230773:AAGLCmIVgZWzEItFoLrkF_9eV5-ZFz4Qlio
 app.use(bot.webhookCallback('/secret-path'))
@@ -122,7 +123,7 @@ app.get('/api/:infoHash/:fileNum/:filename', function(req, res){
 });
 
 //Add Torrent route
-app.post('/api/add', (req,res) => {
+app.post('/api/add', urlencodedParser,(req,res) => {
   console.log("Post at /add, magnet: "+req.body.magnet)
   var magnetURI = req.body.magnet
   addTorrent(magnetURI)
