@@ -59,7 +59,7 @@ bot.on('message', (ctx) => {
   
   
   })
-bot.launch()
+//bot.launch()
 
 //ENDING -------- TELEGRAM BOT
 
