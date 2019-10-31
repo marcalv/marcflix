@@ -17,7 +17,14 @@
     <div class="container">
         <h1>MarcFlix</h1>
         <h6>que web tan cutre</h6>
+        <div class="my-4">
+                <p>Status: <span id="uptimestatus"></span></p>
+                <a id="statuson" class="btn btn-success" href="/api/alive/on">Encender</a>
+                <a id="statusoff" class="btn btn-danger" href="/api/alive/off">Apagar</a>
+        </div>
         
+            
+
             <form action="/api/add" method="post">
                 <div class="form-group">
 
@@ -126,6 +133,21 @@ window.setInterval(function () {
     $.getJSON('/api/info', function(data){
                     console.log('Received data')
                     console.log(data)
+
+                    //Uptime robot status
+                    status = data.UptimeRobotStatus
+                    
+                    if (status == '0'){
+                        text = "apagado"
+                        $("#statuson").show()
+                        $("#statusoff").hide()
+                    }else{
+                        text = "encendido"
+                        $("#statuson").hide()
+                        $("#statusoff").show()
+                    }
+                    $("#uptimestatus").text(text)
+
                     //Add items to sourceBlock
                     $("#torrentdiv").empty();
                     data.torrentsInfo.forEach((torrent)=>{

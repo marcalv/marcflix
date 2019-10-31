@@ -11,7 +11,7 @@ const RSS = require('rss');
 var xml = require('xml');
 var isVideo = require('is-video');
 const parseTorrent = require('parse-torrent')
-
+const axios = require('axios')
 
 //Here we are configuring express to use body-parser as middle-ware.
 //app.use(bodyParser.urlencoded({ extended: false }));
@@ -133,6 +133,45 @@ app.post('/api/add', urlencodedParser,(req,res) => {
   //res.end(JSON.stringify({ response: 'ok' }, null, 3));
 })
 
+const uptime_api_key = 'u813039-dcc893686f8a5a616b09d557'
+const uptime_id = '783690536'
+
+app.get('/api/alive/on', function (req, res) {
+  console.log("Get at /api/alive/on")
+    axios.post('https://api.uptimerobot.com/v2/editMonitor', {
+    api_key: uptime_api_key,
+    id: uptime_id,
+    status: '1'
+    })
+    .then((res) => {
+      //console.log(res.data)
+    })
+    .catch((error) => {
+      //console.error(error)
+    })
+
+  res.redirect('/')
+});
+
+app.get('/api/alive/off', function (req, res) {
+  console.log("Get at /api/alive/off")
+  axios.post('https://api.uptimerobot.com/v2/editMonitor', {
+  api_key: uptime_api_key,
+  id: uptime_id,
+  status: '0'
+  })
+  .then((res) => {
+    //console.log(res.data)
+  })
+  .catch((error) => {
+    //console.error(error)
+  })
+
+res.redirect('/')
+});
+
+
+
 
 
 //Set static folder
@@ -174,6 +213,25 @@ function getMkvFiles() {
   })
 }
 
+function getUptimeRobotStatus() {
+  return new Promise((resolve, reject) => {
+    
+      axios.post('https://api.uptimerobot.com/v2/getMonitors', {
+    api_key: uptime_api_key,
+    monitors: uptime_id,
+    })
+    .then((res) => {
+      //console.log(res.data)
+      resolve(res.data.monitors[0].status)
+    })
+    .catch((error) => {
+      //console.error(error)
+      resolve(error)
+    })
+
+    })
+}
+
 function getTorrents(){
   let torrentSummary = []
   client.torrents.forEach( function (element){
@@ -203,12 +261,14 @@ function getTorrents(){
 
 function getInfo() {
   return new Promise((resolve, reject) => {
-    Promise.all([getFreeDiskSpace(),getMkvFiles()]).then(values => { 
+    Promise.all([getFreeDiskSpace(),getMkvFiles(),getUptimeRobotStatus()]).then(values => { 
       let infoObj = {}
+      infoObj.UptimeRobotStatus = values[2]
       infoObj.freeSpaceDisk = values[0]
       infoObj.torrentsInfo = getTorrents()
       infoObj.files = values[1]
       infoObj.links = makeLinks(infoObj.torrentsInfo)
+      
       resolve(infoObj)
     });  
 });
