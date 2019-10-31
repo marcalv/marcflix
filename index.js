@@ -260,9 +260,9 @@ function getTorrents(){
 
 function getInfo() {
   return new Promise((resolve, reject) => {
-    Promise.all([getFreeDiskSpace(),getMkvFiles(),getUptimeRobotStatus()]).then(values => { 
+    Promise.all([getFreeDiskSpace(),getMkvFiles()]).then(values => { 
       let infoObj = {}
-      infoObj.UptimeRobotStatus = values[2]
+      //infoObj.UptimeRobotStatus = values[2]
       infoObj.freeSpaceDisk = values[0]
       infoObj.torrentsInfo = getTorrents()
       infoObj.files = values[1]
