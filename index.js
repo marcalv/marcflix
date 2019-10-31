@@ -38,11 +38,10 @@ const keyboard = Markup.inlineKeyboard([
 
 
 const bot = new Telegraf('975230773:AAGLCmIVgZWzEItFoLrkF_9eV5-ZFz4Qlio')
-//907510217:AAE1ST2jZ2NDQo0t8Y8Uv5qbVP2CDSroGx8
-//975230773:AAGLCmIVgZWzEItFoLrkF_9eV5-ZFz4Qlio
-//app.use(bot.webhookCallback('/secret-path'))
-//bot.telegram.setWebhook('https://tormarc.herokuapp.com/secret-path')
-bot.start((ctx) => ctx.reply('Hello'))
+app.use(bot.webhookCallback('/secret-path'))
+bot.telegram.setWebhook('https://tormarc.herokuapp.com/secret-path')
+
+//bot.start((ctx) => ctx.reply('Hello'))
 //bot.help((ctx) => ctx.reply('Help message'))
 bot.on('message', (ctx) => {
   console.log('Message from '+ctx.message.from.username+' '+ctx.message.from.id)
