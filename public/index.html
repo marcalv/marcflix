@@ -17,25 +17,23 @@
  
 <body>
     <div class="container mt-4">
-        <img src="/static/images/brandname.png" class="mx-auto d-block mb-4" style="max-width: 300px;" alt="Responsive image">
-
-        <div class="my-4 form-inline">
-                <label for="magnet">Mantener despierto</label>
-                <a id="statuson" class="btn btn-success mx-sm-3" href="/api/alive/on">Activar</a>
-                <a id="statusoff" class="btn btn-danger mx-sm-3" href="/api/alive/off">Desactivar</a>
-                <a id="loading" class="btn btn-secondary mx-sm-3" href="#">Cargando</a>
+        <div class="my-4 text-right">
+                <a id="statuson" class="btn btn-primary btn-sm mx-sm-3 " href="/api/alive/on">🌙 Sleep On</a>
+                <a id="statusoff" class="btn btn-danger btn-sm mx-sm-3 " href="/api/alive/off">🔥 Sleep Off</a>
+                <a id="loading" class="btn btn-secondary btn-sm mx-sm-3 " href="#">Cargando...</a>
         </div>
 
+        <img src="/static/images/brandname.png" class="mx-auto d-block mb-4" style="max-width: 300px;" alt="Responsive image">
+
+        
+
         <form class=" mt-4" action="/api/add" method="post">
-                        
-            
                 <input placeholder="Enlace magnet" type="text" class="form-control mb-2" id="magnet" name="magnet">
-            
-            
                 <button class="btn btn-primary btn-block" type="submit" value="Submit">Añadir</button>
-            
         </form> 
     
+        
+
         <h3 class="mt-4">Torrents</h3>
         <ul class="" id="torrentdiv">
             <!-- CONTENT -->
