@@ -9,7 +9,7 @@
     <script src="/static/libs/jquery-3.4.1.min.js"></script>
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" type="text/css" href="/static/libs/bootstrap-4.3.1.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/libs/dark.bootstrap.min.css">
 
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
 
@@ -26,16 +26,14 @@
                 <a id="loading" class="btn btn-secondary mx-sm-3" href="#">Cargando</a>
         </div>
 
-        <form class="form-inline mt-4" action="/api/add" method="post">
-            <div class="form-group mb-2">
-                <label for="magnet">Enlace magnet:</label>
-            </div>
-            <div class="form-group mx-sm-3 mb-2">
-                <input type="text" class="form-control" id="magnet" name="magnet">
-            </div>
-            <div class="form-group mb-2">
-                <button class="btn btn-primary" type="submit" value="Submit">Añadir</button>
-            </div>
+        <form class=" mt-4" action="/api/add" method="post">
+                        
+            
+                <input placeholder="Enlace magnet" type="text" class="form-control mb-2" id="magnet" name="magnet">
+            
+            
+                <button class="btn btn-primary btn-block" type="submit" value="Submit">Añadir</button>
+            
         </form> 
     
         <h3 class="mt-4">Torrents</h3>
@@ -62,7 +60,7 @@
     
 
     
-        <div class="myfooter mt-5">
+        <div class="myfooter mt-5 bg-secondary">
             <p>Necesitas tener instalada la app VLC 👇 </p>
             <div class="row">
                     <div class="col-6">
@@ -87,7 +85,7 @@
 .myfooter {
   
   padding: 1rem;
-  background-color: #efefef;
+  /* background-color: #efefef; */
   text-align: center;
 
 }
