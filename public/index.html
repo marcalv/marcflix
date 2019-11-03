@@ -42,34 +42,37 @@
                 <button class="btn btn-primary btn-block" type="submit" value="Submit">Añadir</button>
         </form> 
     
-        
-
-        <h3 class="mt-4">Torrents</h3>
-        <ul class="" id="torrentdiv">
-            <!-- CONTENT -->
-        </ul>
-
-        <h3>Descargar</h3>
-        <ul class="" id="filedownload">
+        <div id="empty" style="margin-top: 150px; margin-bottom: 150px;">
+            <p class="text-center">Nada por aquí... Añade un enlace magnet para empezar ☝️</h2>
+        </div>
+        <div id="links">
+            <h3 class="mt-4">Torrents</h3>
+            <ul class="" id="torrentdiv">
                 <!-- CONTENT -->
-        </ul>
+            </ul>
 
-        <h3>Ver en Android</h3>
-        <ul class="" id="filediv">
-                <!-- CONTENT -->
-        </ul>
+            <h3>Descargar</h3>
+            <ul class="" id="filedownload">
+                    <!-- CONTENT -->
+            </ul>
 
-        <h3>Ver en iPhone</h3>
-        <ul class="" id="filedivios">
-                <!-- CONTENT -->
-        </ul>
+            <h3>Ver en Android</h3>
+            <ul class="" id="filediv">
+                    <!-- CONTENT -->
+            </ul>
+
+            <h3>Ver en iPhone</h3>
+            <ul class="" id="filedivios">
+                    <!-- CONTENT -->
+            </ul>
+        </div>
     </div>
 
     
 
     
         <div class="myfooter mt-5 bg-secondary">
-            <p>Necesitas tener instalada la app VLC 👇 </p>
+            <p>Necesitas tener instalada la app VLC</p>
             <div class="row">
                     <div class="col-6">
                             <a href="https://play.google.com/store/apps/details?id=org.videolan.vlc"><img src="/static/images/vlc_android2.png" class="img-fluid" ></a>
@@ -145,6 +148,7 @@ window.setInterval(function () {
   }, freq);
 
 
+
 $("#statusoff").hide()
 $("#statuson").hide()
 uptimestatus()
@@ -165,6 +169,7 @@ function uptimestatus(){
    
 }
 
+$("#links").hide()
 function updateinfo(){
       
       
@@ -174,8 +179,14 @@ function updateinfo(){
                     console.log('Received data')
                     console.log(data)
 
+                    if (data.torrentsInfo.length == 0){
+                        $("#links").hide()
+                        $("#empty").show()
+                    }else{
+                        $("#links").show()
+                        $("#empty").hide()
+                    }
                     
-
                     //Add items to sourceBlock
                     $("#torrentdiv").empty();
                     data.torrentsInfo.forEach((torrent)=>{
