@@ -28,8 +28,8 @@
 <body>
     <div class="container mt-4">
         <div class="my-4 text-right">
-                <a id="statuson" class="btn btn-primary btn-sm mx-sm-3 " href="/api/alive/on">🌙 Sleep On</a>
-                <a id="statusoff" class="btn btn-danger btn-sm mx-sm-3 " href="/api/alive/off">🔥 Sleep Off</a>
+                <a id="statuson" class="btn btn-primary btn-sm mx-sm-3 " href="/api/alive/on">🌙 Sleep</a>
+                <a id="statusoff" class="btn btn-danger btn-sm mx-sm-3 " href="/api/alive/off">🔥 Keeping Alive!</a>
                 <a id="loading" class="btn btn-secondary btn-sm mx-sm-3 " href="#">Cargando...</a>
         </div>
 
@@ -131,9 +131,18 @@ const FileItemDownload = ({ file }) => `
 `;
 
 updateinfo()
+var count = 0;
+var freq = 3000; //update freq in ms
+var maxalive = 20 //max time refreshing page in minutes.
+
 window.setInterval(function () {
-    updateinfo()
-  }, 3000);
+    if ( ((count*freq) / (1000*60)) < maxalive ){
+        console.log(count)
+        count++;
+        updateinfo()
+    }    
+    
+  }, freq);
 
 
 $("#statusoff").hide()
