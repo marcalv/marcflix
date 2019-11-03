@@ -57,8 +57,8 @@ const keyboard = Markup.inlineKeyboard([
 ])
 
 const bot = new Telegraf(bot_token)
-//app.use(bot.webhookCallback('/secret-path'))
-//bot.telegram.setWebhook('https://tormarc.herokuapp.com/secret-path')
+app.use(bot.webhookCallback('/secret-path'))
+bot.telegram.setWebhook('https://tormarc.herokuapp.com/secret-path')
 
 bot.start((ctx) => ctx.reply('Hello'))
 bot.help((ctx) => ctx.reply('Help message'))
@@ -76,7 +76,7 @@ bot.on('message', (ctx) => {
     }
   }
 })
-bot.launch()
+//bot.launch()
 
 //================================================================================
 //Torrent
@@ -98,7 +98,7 @@ var client = new WebTorrent()
 //Autoadd torrent on startup for debugging
 if (DEBUG) {
   var exampleMagnetURI = "magnet:?xt=urn:btih:f59f3e4b2eb8be6e96148667ebbcc53343a13dc3&dn=The.Simpsons.S31E02.1080p.WEB.x264-TBS[rarbg]&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Feddie4.nl%3A6969&tr=udp%3A%2F%2Ftracker.pirateparty.gr%3A6969&tr=udp%3A%2F%2Fopentrackr.org%3A1337&tr=udp%3A%2F%2Ftracker.zer0day.to%3A1337"
-  addTorrent(exampleMagnetURI)
+  //addTorrent(exampleMagnetURI)
 }
 
 
