@@ -109,6 +109,9 @@ if (DEBUG) {
   createTorrentDir()
 }
 
+var trackers  = '' 
+gettrackers()
+
 // Start client
 var WebTorrent = require('webtorrent')
 var client = new WebTorrent()
@@ -119,6 +122,7 @@ if (DEBUG) {
   var exampleMagnetURI = "magnet:?xt=urn:btih:f59f3e4b2eb8be6e96148667ebbcc53343a13dc3&dn=The.Simpsons.S31E02.1080p.WEB.x264-TBS[rarbg]&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Feddie4.nl%3A6969&tr=udp%3A%2F%2Ftracker.pirateparty.gr%3A6969&tr=udp%3A%2F%2Fopentrackr.org%3A1337&tr=udp%3A%2F%2Ftracker.zer0day.to%3A1337"
   //addTorrent(exampleMagnetURI)
 }
+
 
 
 //================================================================================
@@ -325,6 +329,8 @@ function createTorrentDir(){
 //addTorrent to webtorrent client
 function addTorrent(magnetURI){
   try{
+    magnetURI = magnetURI + trackers
+    //console.log(magnetURI)
     parseTorrent(magnetURI)
 
     client.add(magnetURI, { path: torrentDir }, function (torrent) {
@@ -379,3 +385,22 @@ function makeLinks(torrentsInfo){
 }
 
 
+
+function gettrackers(){
+  return new Promise((resolve, reject) => {
+    axios.get('https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt').then(res => {
+      
+      list_with_enters = res.data.split('\n')
+      
+      var tracker_str = ''
+      list_with_enters.forEach(position => {
+        if (position != ''){
+          tracker_str = tracker_str + '&tr=' + position
+        }
+      })
+      //console.log(tracker_str)
+      trackers = tracker_str
+    }).catch(error => {});  
+  
+});
+}
