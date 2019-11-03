@@ -52,13 +52,11 @@ const Telegraf = require('telegraf')
 const Extra = require('telegraf/extra')
 const Markup = require('telegraf/markup')
 
-const keyboard = Markup.inlineKeyboard([
-  Markup.urlButton('Open MarcFlix', 'https://tormarc.herokuapp.com'),
-])
-
 const bot = new Telegraf(bot_token)
-app.use(bot.webhookCallback('/secret-path'))
-bot.telegram.setWebhook('https://tormarc.herokuapp.com/secret-path')
+
+const keyboard = Markup.inlineKeyboard([
+     Markup.urlButton('Open MarcFlix', HOSTNAME)
+    ])
 
 bot.start((ctx) => ctx.reply('Hello'))
 bot.help((ctx) => ctx.reply('Help message'))
@@ -68,7 +66,14 @@ bot.on('message', (ctx) => {
   if (ctx.message.from.id == '6663869'){
     if (ctx.message.text.match(/magnet:\?xt=urn:[a-z0-9]+:[a-z0-9]{32}/i) != null){
       console.log('is magnet')
-      ctx.reply('Adding magnet',Extra.markup(keyboard))
+      torrent = parseTorrent(ctx.message.text)
+      // keyboard = Markup.inlineKeyboard([
+      //   Markup.urlButton('Open MarcFlix', HOSTNAME),
+      //   Markup.callbackButton('ReSend','asdf'),
+      //   Markup.button(ctx.message.text)
+      // ])
+      //console.log(ctx.message)
+      ctx.reply(torrent.dn,Extra.markup(keyboard),true)
       addTorrent(ctx.message.text)
     }else{
       console.log('not magnet')
@@ -76,7 +81,21 @@ bot.on('message', (ctx) => {
     }
   }
 })
-//bot.launch()
+
+bot.on('callback_query', (ctx) => {
+  ctx.answerCbQuery()
+  console.log(ctx.callbackQuery.data)
+  //addTorrent(ctx.message.text)
+})
+
+
+
+if (DEBUG) {
+  bot.launch()
+}else{
+  app.use(bot.webhookCallback('/secret-path'))
+  bot.telegram.setWebhook('https://tormarc.herokuapp.com/secret-path')
+} 
 
 //================================================================================
 //Torrent
