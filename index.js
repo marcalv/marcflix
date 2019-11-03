@@ -119,7 +119,7 @@ var client = new WebTorrent()
 
 //Autoadd torrent on startup for debugging
 if (DEBUG) {
-  var exampleMagnetURI = "magnet:?xt=urn:btih:f59f3e4b2eb8be6e96148667ebbcc53343a13dc3&dn=The.Simpsons.S31E02.1080p.WEB.x264-TBS[rarbg]&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Feddie4.nl%3A6969&tr=udp%3A%2F%2Ftracker.pirateparty.gr%3A6969&tr=udp%3A%2F%2Fopentrackr.org%3A1337&tr=udp%3A%2F%2Ftracker.zer0day.to%3A1337"
+  var exampleMagnetURI = "magnet:?xt=urn:btih:33a4b90653786de8710ba595948a42272336bb9c&dn=Marvels Agents of S H I E L D S01E01 HDTV x264-LOL&tr=udp://tracker.istole.it:80/announce&tr=udp://tracker.openbittorrent.com:80/announce&tr=udp://tracker.publicbt.com:80/announce&tr=udp://open.demonii.com:1337/announce&tr=udp://exodus.desync.com:6969/announce&tr=http://tracker.glotorrents.com:6969/announce&tr=http://tracker.trackerfix.com:80/announce&tr=udp://tracker.zer0day.to:1337/announce&tr=udp://tracker.leechers-paradise.org:6969/announce&tr=udp://coppersurfer.tk:6969/announce"
   //addTorrent(exampleMagnetURI)
 }
 
@@ -285,7 +285,9 @@ function getTorrents(){
       paused : element.paused,
       path : element.path,
       magnetURI : element.magnetURI,
-      downloadSpeed : formatBytes(element.downloadSpeed)
+      downloadSpeed : formatBytes(element.downloadSpeed),
+      announce : element.announce
+
     }
     let files = []
       element.files.forEach((file)=>{
@@ -330,7 +332,7 @@ function createTorrentDir(){
 function addTorrent(magnetURI){
   try{
     magnetURI = magnetURI + trackers
-    //console.log(magnetURI)
+    console.log(magnetURI)
     parseTorrent(magnetURI)
 
     client.add(magnetURI, { path: torrentDir }, function (torrent) {
