@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Chrome Web App -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- iOS Safari App -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <title>MarcFlix</title>
+    <link rel="icon" type="image/png" href="/static/images/favicon.png"/>
+
+    <!-- jQuery -->
+    <script src="/static/libs/jquery-3.4.1.min.js"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="/static/libs/dark.bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+
+</head>
+ 
+<body>
+    <div class="container mt-4">
+        <div class="mt-4" id="form">
+            <input placeholder="Búsqueda" type="text" id="searchfield" class="form-control mb-2">
+            <button class="btn btn-primary btn-block" type="Submit" onclick="searchfunc()">Añadir</button>
+        </div> 
+
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Size</th>
+                <th scope="col">Seeds</th>
+                <th scope="col">Provider</th>
+                <th scope="col">Magnet</th>
+              </tr>
+            </thead>
+            <tbody id="tablebody">
+            </tbody>
+          </table>
+
+    </div>
+</body>
+
+
+<style>
+.myfooter {
+  
+  padding: 1rem;
+  /* background-color: #efefef; */
+  text-align: center;
+
+}
+img {
+    max-height: 201px !important;
+    width: auto;
+}
+
+</style>
+
+
+<script>
+    const TorrentItem = ({ torrent }) => `
+
+    <tr>
+                <td>${torrent.title}</td>
+                <td>${torrent.size}</td>
+                <td>${torrent.seeds}</td>
+                <td>${torrent.provider}</td>
+                <td>${torrent.magnet}</td>
+              </tr>
+`;
+
+
+
+
+
+
+
+
+
+function searchfunc(){
+    var search = $('#searchfield').val()      
+    var data = {searchterm : search}
+    console.log(search)
+    console.log(data)
+    $.post('/api/search/', data ,function(data, status){
+                    console.log('Received data')
+                    console.log(status)
+                    console.log(data)
+
+                    //Add items to sourceBlock
+                    $("#torrentdiv").empty();
+                    data.forEach((torrent)=>{
+                        console.log(torrent.title)
+                        itemBlock = TorrentItem({ torrent: torrent})
+                        $('#tablebody').append(itemBlock)
+                    });
+                
+                 });
+
+  }
+
+
+
+
+    
+</script>
+ 
+</html>
