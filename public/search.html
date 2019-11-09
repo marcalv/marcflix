@@ -27,6 +27,9 @@
  
 <body>
     <div class="container mt-4">
+        <a href="/" class="btn btn-secondary btn-block my-4">Go back</a>
+
+
         <div class="mt-4" id="form">
             <input placeholder="Búsqueda" type="text" id="searchfield" class="form-control mb-2">
             <button class="btn btn-primary btn-block" type="Submit" onclick="searchfunc()">Añadir</button>
@@ -65,6 +68,7 @@ img {
 
 </style>
 
+<a href="/api/add/${torrent.magnet}"></a>
 
 <script>
     const TorrentItem = ({ torrent }) => `
@@ -74,24 +78,43 @@ img {
                 <td>${torrent.size}</td>
                 <td>${torrent.seeds}</td>
                 <td>${torrent.provider}</td>
-                <td>${torrent.magnet}</td>
+                <td> 
+                  <button class="btn btn-primary btn-sm"  value="Submit" onclick="add('${torrent.magnet}',this)">Add</button>
+
+                </td>
               </tr>
 `;
 
 
 
 
-
+function add(magnet,button){
+  console.log('Adding '+magnet)
+  data = {magnet:magnet}
+  $.post('/api/add/', data ,function(data, status){
+    console.log(status)
+    $(button).removeClass('btn-primary')
+    if (status = 'success'){
+      $(button).addClass('btn-success')
+    }else{
+      $(button).addClass('btn-danger')
+    }
+  }).catch(error=>{$(button).addClass('btn-danger')})
+  
+}
 
 
 
 
 function searchfunc(){
-    var search = $('#searchfield').val()      
-    var data = {searchterm : search}
-    console.log(search)
-    console.log(data)
-    $.post('/api/search/', data ,function(data, status){
+  var searchterm = $('#searchfield').val()      
+
+
+  $.getJSON('/api/getproviders/' ,function(data, status){
+    data.forEach((provider)=>{
+      console.log('Getting provider: '+provider.name)
+      var data = {searchterm : searchterm, provider: provider.name}
+      $.post('/api/search/', data ,function(data, status){
                     console.log('Received data')
                     console.log(status)
                     console.log(data)
@@ -105,6 +128,10 @@ function searchfunc(){
                     });
                 
                  });
+    })
+  })
+
+    
 
   }
 

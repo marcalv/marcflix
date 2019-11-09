@@ -152,46 +152,23 @@ app.get('/api/info', (req,res) => {
  app.post('/api/search/', urlencodedParser, function (req, res) {
   console.log("Post at /api/search")
   var searchterm = req.body.searchterm
-  //var searchterm = req.body.provider
+  var provider = req.body.provider
   console.log(searchterm)
   
   TorrentSearchApi.enablePublicProviders();
-  const activeProviders = TorrentSearchApi.getActiveProviders();
-
-  data = 
-    [
-      {
-        desc: "https://blablabal",
-        magnet: "magnet:?xt=urn:btih:c3b574423cc7af96bf538979ea689d16ebc3ba01&dn=The",
-        peers: 712,
-        provider: "Rarbg",
-        seeds: 3311,
-        size: "1.7 GiB",
-        time: "2019-11-02",
-        title: "The walking dead S10E03"
+  const torrents = TorrentSearchApi.search([provider],searchterm, 'All', '20').then(response => {
+    if (typeof response != 'undefined'){
+      if (typeof response[0].magnet === 'undefined'){
+        response=[]
       }
-    ,{
-      desc: "https://blablabal",
-      magnet: "magnet:?xt=urn:btih:c3b574423cc7af96bf538979ea689d16ebc3ba01&dn=The",
-      peers: 712,
-      provider: "Rarbg",
-      seeds: 3311,
-      size: "1.7 GiB",
-      time: "2019-11-02",
-      title: "The walking dead S10E03"
-    }
-  ]
-  //res.setHeader('Content-Type', 'application/json');
-  //res.end(JSON.stringify(data, null, 3));
-  const torrents = TorrentSearchApi.search(['Rarbg','1337x'],searchterm, 'All', '20').then(response => {
+    } 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response, null, 3));
-    console.log(response[0])
   })
 });
 
-app.get('/api/search/getproviders', function (req, res) {
-  console.log("Get at /api/search/getproviders")
+app.get('/api/getproviders', function (req, res) {
+  console.log("Get at /api/getproviders")
 
   TorrentSearchApi.enablePublicProviders();
   const activeProviders = TorrentSearchApi.getActiveProviders();
