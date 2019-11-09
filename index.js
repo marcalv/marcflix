@@ -120,7 +120,7 @@ var client = new WebTorrent()
 //Autoadd torrent on startup for debugging
 if (DEBUG) {
   var exampleMagnetURI = "magnet:?xt=urn:btih:33a4b90653786de8710ba595948a42272336bb9c&dn=Marvels Agents of S H I E L D S01E01 HDTV x264-LOL&tr=udp://tracker.istole.it:80/announce&tr=udp://tracker.openbittorrent.com:80/announce&tr=udp://tracker.publicbt.com:80/announce&tr=udp://open.demonii.com:1337/announce&tr=udp://exodus.desync.com:6969/announce&tr=http://tracker.glotorrents.com:6969/announce&tr=http://tracker.trackerfix.com:80/announce&tr=udp://tracker.zer0day.to:1337/announce&tr=udp://tracker.leechers-paradise.org:6969/announce&tr=udp://coppersurfer.tk:6969/announce"
-  addTorrent(exampleMagnetURI)
+  //addTorrent(exampleMagnetURI)
 }
 
 //================================================================================
@@ -157,11 +157,17 @@ app.get('/api/info', (req,res) => {
   
   TorrentSearchApi.enablePublicProviders();
   const torrents = TorrentSearchApi.search([provider],searchterm, 'All', '20').then(response => {
-    if (typeof response != 'undefined'){
-      if (typeof response[0].magnet === 'undefined'){
+    if ( (response === undefined) || (!(response && response.length)) ){
+      //undefined o vacio
+      response=[]
+    }else{
+      if ('magnet' in response[0]){
+        //todo ok
+      }else{
+        //con contenido pero sin magnet
         response=[]
       }
-    } 
+    }
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response, null, 3));
   })

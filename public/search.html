@@ -32,10 +32,14 @@
 
         <div class="mt-4" id="form">
             <input placeholder="Búsqueda" type="text" id="searchfield" class="form-control mb-2">
-            <button class="btn btn-primary btn-block" type="Submit" onclick="searchfunc()">Añadir</button>
+            <button class="btn btn-primary btn-block" type="Submit" onclick="searchfunc()">Buscar</button>
         </div> 
 
-        <table class="table">
+        <div id="loading" style="margin-top: 150px; margin-bottom: 100px;">
+          <p class="text-center">Cargando...</h2>
+        </div>
+
+        <table id="table" class="table">
             <thead>
               <tr>
                 <th scope="col">Title</th>
@@ -105,10 +109,13 @@ function add(magnet,button){
 
 
 
-
+$('#table').hide()
+$('#loading').hide()
 function searchfunc(){
   var searchterm = $('#searchfield').val()      
-
+  $('#tablebody').empty()
+  $('#table').hide()
+  $('#loading').show()
 
   $.getJSON('/api/getproviders/' ,function(data, status){
     data.forEach((provider)=>{
@@ -118,6 +125,9 @@ function searchfunc(){
                     console.log('Received data')
                     console.log(status)
                     console.log(data)
+
+                    $('#table').show()
+                    $('#loading').hide()
 
                     //Add items to sourceBlock
                     $("#torrentdiv").empty();
