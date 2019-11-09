@@ -120,7 +120,7 @@ var client = new WebTorrent()
 //Autoadd torrent on startup for debugging
 if (DEBUG) {
   var exampleMagnetURI = "magnet:?xt=urn:btih:33a4b90653786de8710ba595948a42272336bb9c&dn=Marvels Agents of S H I E L D S01E01 HDTV x264-LOL&tr=udp://tracker.istole.it:80/announce&tr=udp://tracker.openbittorrent.com:80/announce&tr=udp://tracker.publicbt.com:80/announce&tr=udp://open.demonii.com:1337/announce&tr=udp://exodus.desync.com:6969/announce&tr=http://tracker.glotorrents.com:6969/announce&tr=http://tracker.trackerfix.com:80/announce&tr=udp://tracker.zer0day.to:1337/announce&tr=udp://tracker.leechers-paradise.org:6969/announce&tr=udp://coppersurfer.tk:6969/announce"
-  //addTorrent(exampleMagnetURI)
+  addTorrent(exampleMagnetURI)
 }
 
 //================================================================================
@@ -370,13 +370,21 @@ function createTorrentDir(){
 function addTorrent(magnetURI){
   try{
     magnetURI = magnetURI + trackers
-    console.log(magnetURI)
-    parseTorrent(magnetURI)
-
-    client.add(magnetURI, { path: torrentDir }, function (torrent) {
-      torrent.on('done', () => {console.log('torrent download finished')})
-      torrent.on('error', (err) => {console.log(err)})
+    infoHash = parseTorrent(magnetURI).infoHash
+    torrents = getTorrents()
+    duplicated = false
+    torrents.forEach(torrent => {
+      if (torrent.infoHash == infoHash){
+        duplicated = true
+      }
+    
     })
+    if (duplicated == false){
+      client.add(magnetURI, { path: torrentDir }, function (torrent) {
+        torrent.on('done', () => {console.log('torrent download finished')})
+        torrent.on('error', (err) => {console.log(err)})
+      })
+    }
   }
   catch (e){console.log(e)}
 }
