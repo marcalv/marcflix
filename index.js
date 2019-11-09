@@ -10,7 +10,7 @@ const glob = require('glob');
 var isVideo = require('is-video');
 const parseTorrent = require('parse-torrent')
 const axios = require('axios')
-
+const TorrentSearchApi = require('torrent-search-api');
 
 
 //================================================================================
@@ -123,7 +123,10 @@ if (DEBUG) {
   //addTorrent(exampleMagnetURI)
 }
 
-
+//================================================================================
+//Torrent Search API
+//================================================================================
+TorrentSearchApi.enablePublicProviders();
 
 //================================================================================
 // URL ROUTES
@@ -145,6 +148,41 @@ app.get('/api/info', (req,res) => {
     });   
 })     
 
+ // API SEARCH RESULTS
+ app.post('/api/search/', urlencodedParser, function (req, res) {
+  console.log("Post at /api/search")
+  var searchterm = req.body.searchterm
+  var provider = req.body.provider
+  console.log(searchterm)
+  
+  TorrentSearchApi.enablePublicProviders();
+  const torrents = TorrentSearchApi.search([provider],searchterm, 'All', '20').then(response => {
+    if (typeof response != 'undefined'){
+      if (typeof response[0].magnet === 'undefined'){
+        response=[]
+      }
+    } 
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response, null, 3));
+  })
+});
+
+app.get('/api/getproviders', function (req, res) {
+  console.log("Get at /api/getproviders")
+
+  TorrentSearchApi.enablePublicProviders();
+  const activeProviders = TorrentSearchApi.getActiveProviders();
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify(activeProviders, null, 3));
+});
+
+
+ // HOME PAGE ROUTE
+ app.get('/search', function (req, res) {
+  console.log("Get at /search")
+
+  res.sendFile(path.join(__dirname,'/public/search.html'))
+});
 
 // /LIST
 app.get('/list', (req,res) => {
