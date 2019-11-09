@@ -38,22 +38,19 @@
         <div id="loading" style="margin-top: 150px; margin-bottom: 100px;">
           <p class="text-center">Cargando...</h2>
         </div>
+      </div>
 
-        <table id="table" class="table">
+        <table id="table" class="mt-4 table table-striped table-sm">
             <thead>
               <tr>
-                <th scope="col">Title</th>
-                <th scope="col">Size</th>
-                <th scope="col">Seeds</th>
-                <th scope="col">Provider</th>
-                <th scope="col">Magnet</th>
+                <th scope="col">Resultados</th>
               </tr>
             </thead>
             <tbody id="tablebody">
             </tbody>
           </table>
 
-    </div>
+    
 </body>
 
 
@@ -77,16 +74,20 @@ img {
 <script>
     const TorrentItem = ({ torrent }) => `
 
-    <tr>
-                <td>${torrent.title}</td>
-                <td>${torrent.size}</td>
-                <td>${torrent.seeds}</td>
-                <td>${torrent.provider}</td>
-                <td> 
-                  <button class="btn btn-primary btn-sm"  value="Submit" onclick="add('${torrent.magnet}',this)">Add</button>
 
-                </td>
-              </tr>
+              <tr>
+                    <td>
+                      <div class="row">
+                        
+                      </div>
+                      <div class="row no-gutters"  onclick="add('${torrent.magnet}',this)">
+                          <div class="col-9 text-center">${torrent.title.replace(/\./g," ")}</div>
+                          <div class="col-2 text-center"> ${torrent.size}</div>
+                          <div class="col-1 text-right">${torrent.seeds}</div>
+                        </div>
+                    </td>
+                
+                </tr>
 `;
 
 
@@ -136,13 +137,10 @@ function searchfunc(){
                         itemBlock = TorrentItem({ torrent: torrent})
                         $('#tablebody').append(itemBlock)
                     });
-                
+                    
                  });
     })
   })
-
-    
-
   }
 
 
