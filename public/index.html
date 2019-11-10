@@ -117,6 +117,8 @@ img {
     const TorrentItem = ({ torrent }) => `
     <li id="${torrent.infoHash}" class="">
             ${torrent.progress}% - ${torrent.downloadSpeed}/s  - ${torrent.name} 
+            <a class="btn btn-danger btn-sm mx-sm-3 " href="/api/delete/${torrent.infoHash}">Delete</a>
+
     </li>
 `;
 

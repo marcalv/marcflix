@@ -119,8 +119,8 @@ var client = new WebTorrent()
 
 //Autoadd torrent on startup for debugging
 if (DEBUG) {
-  var exampleMagnetURI = "magnet:?xt=urn:btih:33a4b90653786de8710ba595948a42272336bb9c&dn=Marvels Agents of S H I E L D S01E01 HDTV x264-LOL&tr=udp://tracker.istole.it:80/announce&tr=udp://tracker.openbittorrent.com:80/announce&tr=udp://tracker.publicbt.com:80/announce&tr=udp://open.demonii.com:1337/announce&tr=udp://exodus.desync.com:6969/announce&tr=http://tracker.glotorrents.com:6969/announce&tr=http://tracker.trackerfix.com:80/announce&tr=udp://tracker.zer0day.to:1337/announce&tr=udp://tracker.leechers-paradise.org:6969/announce&tr=udp://coppersurfer.tk:6969/announce"
-  //addTorrent(exampleMagnetURI)
+  var exampleMagnetURI = "magnet:?xt=urn:btih:4c166f107d38030293f7008da2f70b5c782a12ff&dn=The.Walking.Dead.S10E06.WEB.H264-XLF%5Brarbg%5D&tr=http%3A%2F%2Fbt-tracker.gamexp.ru%3A2710%2Fannounce&tr=http%3A%2F%2Fexplodie.org%3A6969%2Fannounce&tr=http%3A%2F%2Fh4.trakx.nibba.trade%3A80%2Fannounce&tr=http%3A%2F%2Fmail2.zelenaya.net%3A80%2Fannounce&tr=http%3A%2F%2Fnewtoncity.org%3A6969%2Fannounce&tr=http%3A%2F%2Fopen.acgnxtracker.com%3A80%2Fannounce&tr=http%3A%2F%2Fopen.trackerlist.xyz%3A80%2Fannounce&tr=http%3A%2F%2Fopentracker.acgnx.se%3A80%2Fannounce&tr=http%3A%2F%2Fopentracker.xyz%3A80%2Fannounce&tr=http%3A%2F%2Fpow7.com%3A80%2Fannounce&tr=http%3A%2F%2Fretracker.sevstar.net%3A2710%2Fannounce&tr=http%3A%2F%2Fsukebei.tracker.wf%3A8888%2Fannounce&tr=http%3A%2F%2Ft.nyaatracker.com%3A80%2Fannounce"
+  addTorrent(exampleMagnetURI)
 }
 
 //================================================================================
@@ -271,7 +271,14 @@ app.get('/api/uptimestatus', (req,res) => {
   });   
 })    
 
-
+// API/DELETE
+app.get('/api/delete/:infoHash', (req,res) => {
+  console.log("Get at /api/delete/"+req.params.infoHash)
+  let fileNum = req.params.infoHash
+  client.remove(infoHash)
+  res.redirect('/')
+   
+})    
 
 
 //================================================================================
@@ -387,10 +394,13 @@ function addTorrent(magnetURI){
     })
     if (duplicated == false){
       client.add(magnetURI, { path: torrentDir }, function (torrent) {
-        torrent.on('done', () => {console.log('torrent download finished')})
+        torrent.on('done', () => {
+          console.log('torrent download finished')
+          torrent.pause()
+        })
         torrent.on('error', (err) => {console.log(err)})
       })
-    }
+    } 
   }
   catch (e){console.log(e)}
 }
@@ -429,7 +439,7 @@ function makeLinks(torrentsInfo){
       if (isVideo(path.basename(file))){
         fileObj = 
           { name: path.basename(file),
-            url: HOSTNAME+'/api/'+torrent.infoHash+'/'+index+'/'+path.basename(file)
+            url: HOSTNAME+'/api/'+torrent.infoHash+'/'+index+'/'+path.basename(file)+path.extname(file)
           }
           filesObj.push(fileObj)
       }
