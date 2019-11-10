@@ -127,8 +127,10 @@ function searchfunc(){
                     console.log(status)
                     console.log(data)
 
-                    $('#table').show()
-                    $('#loading').hide()
+                    if (typeof data !== 'undefined' && data.length > 0){
+                      $('#table').show()
+                      $('#loading').hide()
+                    }
 
                     //Add items to sourceBlock
                     $("#torrentdiv").empty();
