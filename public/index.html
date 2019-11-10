@@ -118,7 +118,22 @@ img {
     <li id="${torrent.infoHash}" class="">
             ${torrent.progress}% - ${torrent.downloadSpeed}/s  - ${torrent.name} 
             <a class="btn btn-danger btn-sm mx-sm-3 " href="/api/delete/${torrent.infoHash}">Delete</a>
+            <a class="btn btn-secondary btn-sm mx-sm-3 " href="/api2/file/stopall/${torrent.infoHash}">Stop All</a>
+            
+            <ul id="${torrent.infoHash}-files" class="files">
+                
+            </ul>
 
+    </li>
+
+`;
+
+const TorrentFile = ({ torrent, file }) => `
+    <li class="">
+            ${file.progress}% - ${file.name} 
+            <a class="btn btn-secondary btn-sm mx-sm-3 " href="/api/file/start/${torrent.infoHash}/${file.index} ">Start</a>
+            <a class="btn btn-secondary btn-sm mx-sm-3 " href="/api/file/stop/${torrent.infoHash}/${file.index}">Stop</a>
+           
     </li>
 `;
 
@@ -193,6 +208,10 @@ function updateinfo(){
                         $("#links").show()
                         $("#empty").hide()
                     }
+
+                    
+                    
+
                     
                     //Add items to sourceBlock
                     $("#torrentdiv").empty();
@@ -200,6 +219,17 @@ function updateinfo(){
                         console.log(torrent.name)
                         itemBlock = TorrentItem({ torrent: torrent})
                         $('#torrentdiv').append(itemBlock)
+                    });
+
+                    $(".files").empty();
+                    data.torrentsInfo.forEach((torrent)=>{
+                        torrent.files.forEach((file)=>{
+                            console.log(file.name)
+                            itemBlock = TorrentFile({ file: file,torrent: torrent})
+                            console.log('#'+torrent.infoHash+'-files')
+                            $('#'+torrent.infoHash+'-files').append(itemBlock)
+                        })
+                        
                     });
 
                     $("#filediv").empty();

@@ -274,11 +274,38 @@ app.get('/api/uptimestatus', (req,res) => {
 // API/DELETE
 app.get('/api/delete/:infoHash', (req,res) => {
   console.log("Get at /api/delete/"+req.params.infoHash)
-  let fileNum = req.params.infoHash
+  let infoHash = req.params.infoHash
   client.remove(infoHash)
   res.redirect('/')
    
 })    
+
+// 
+app.get('/api/file/start/:infoHash/:index', (req,res) => {
+  console.log("Get at /api/file/start/"+req.params.infoHash+"/"+req.params.index)
+  let infoHash = req.params.infoHash
+  let index = req.params.index
+  torrent=client.get(infoHash)
+  torrent.files[index].select()
+  res.redirect('/')
+})  
+
+app.get('/api/file/stop/:infoHash/:index', (req,res) => {
+  console.log("Get at /api/file/start/"+req.params.infoHash+"/"+req.params.index)
+  let infoHash = req.params.infoHash
+  let index = req.params.index
+  torrent=client.get(infoHash)
+  torrent.files[index].deselect()
+  res.redirect('/')
+})  
+
+app.get('/api2/file/stopall/:infoHash', (req,res) => {
+  console.log("Get at /api/file/stopall/"+req.params.infoHash)
+  let infoHash = req.params.infoHash
+  torrent=client.get(infoHash)
+  torrent.deselect(0, torrent.pieces.length - 1, false)
+  res.redirect('/')
+})  
 
 
 //================================================================================
@@ -341,8 +368,14 @@ function getTorrents(){
 
     }
     let files = []
-      element.files.forEach((file)=>{
-        files.push(file.path)
+      element.files.forEach((file,index)=>{
+        fileObj={
+          path:file.path,
+          name:file.name,
+          progress:(file.progress*100).toFixed(2),
+          index:index
+        }
+        files.push(fileObj)
       })
     torrentObject.files = files
     torrentSummary.push(torrentObject)
@@ -394,6 +427,8 @@ function addTorrent(magnetURI){
     })
     if (duplicated == false){
       client.add(magnetURI, { path: torrentDir }, function (torrent) {
+        //console.log(client.torrents)
+        //torrent.files[2].select()
         torrent.on('done', () => {
           console.log('torrent download finished')
           torrent.pause()
@@ -417,10 +452,10 @@ function getRSS(infoObj) {
   /* loop over data and add to feed */
     infoObj.torrentsInfo.forEach((torrent)=>{
       torrent.files.forEach((file,index)=>{
-        if (isVideo(path.basename(file))){
-          line = '#EXTINF:-1, '+path.basename(file)+'\n'
+        if (isVideo(path.basename(file.path))){
+          line = '#EXTINF:-1, '+path.basename(file.path)+'\n'
           m3u8Content=m3u8Content.concat(line)
-          line = HOSTNAME+'/api/'+torrent.infoHash+'/'+index+'/file'+path.extname(file)+'\n'
+          line = HOSTNAME+'/api/'+torrent.infoHash+'/'+index+'/file'+path.extname(file.path)+'\n'
           m3u8Content=m3u8Content.concat(line)
         }
         
@@ -436,10 +471,10 @@ function makeLinks(torrentsInfo){
   let fileObj = {}
   torrentsInfo.forEach((torrent)=>{
     torrent.files.forEach((file,index)=>{
-      if (isVideo(path.basename(file))){
+      if (isVideo(path.basename(file.path))){
         fileObj = 
-          { name: path.basename(file),
-            url: HOSTNAME+'/api/'+torrent.infoHash+'/'+index+'/'+path.basename(file)+path.extname(file)
+          { name: path.basename(file.path),
+            url: HOSTNAME+'/api/'+torrent.infoHash+'/'+index+'/'+path.basename(file.path)+path.extname(file.path)
           }
           filesObj.push(fileObj)
       }
