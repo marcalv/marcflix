@@ -31,8 +31,8 @@
 
 
         <div class="mt-4" id="form">
-            <input placeholder="Búsqueda" type="text" id="searchfield" class="form-control mb-2">
-            <button class="btn btn-primary btn-block" type="Submit" onclick="searchfunc()">Buscar</button>
+            <input placeholder="Búsqueda" type="text" id="searchfield" class="form-control mb-2" autocomplete="on">
+            <button class="btn btn-primary btn-block" id="searchbutton" type="Submit" onclick="searchfunc()">Buscar</button>
         </div> 
 
         <div id="loading" style="margin-top: 150px; margin-bottom: 100px;">
@@ -72,6 +72,22 @@ img {
 <a href="/api/add/${torrent.magnet}"></a>
 
 <script>
+
+
+
+
+$(document).ready(function(){
+    $('#searchfield').keypress(function(e){
+      if(e.keyCode==13)
+      $('#searchbutton').click();
+    });
+});
+
+
+
+
+
+
     const TorrentItem = ({ torrent }) => `
 
 
