@@ -52,7 +52,8 @@
         </div>
         <div id="links">
             <h3 class="mt-4">Torrents</h3>
-            <ul class="" id="torrentdiv">
+            <button class="btn btn-info btn-sm mx-sm-3"  onclick="expand_files()">Avanzado</button>
+            <ul class="list-group my-4" id="torrentdiv">
                 <!-- CONTENT -->
             </ul>
 
@@ -115,12 +116,15 @@ img {
 
 <script>
     const TorrentItem = ({ torrent }) => `
-    <li id="${torrent.infoHash}" class="">
-            ${torrent.progress}% - ${torrent.downloadSpeed}/s - ${torrent.numPeers} - ${torrent.name} 
-            <button class="btn btn-danger btn-sm mx-sm-3 " onclick="deletetorrent('${torrent.infoHash}')">Delete</button>
-            <button class="btn btn-secondary btn-sm mx-sm-3 " onclick="stopall('${torrent.infoHash}')">Stop All</button>
+    <li id="${torrent.infoHash}" class="list-group-item">
+            <h4>${torrent.name}</h4>
+            <p>${torrent.progress}% - ${torrent.downloadSpeed}/s - ${torrent.numPeers} peers<p>
+            <div class="row"> 
+              <button class="btn btn-danger btn-sm mx-sm-3 " onclick="deletetorrent('${torrent.infoHash}')">Delete</button>
+              <button class="btn btn-secondary btn-sm mx-sm-3 " onclick="stopall('${torrent.infoHash}')">Pause All Files</button>
+            </div>
             
-            <ul id="${torrent.infoHash}-files" class="files">
+            <ul id="${torrent.infoHash}-files" class="collapse multi-collapse files list-group mt-3">
                 
             </ul>
 
@@ -129,11 +133,13 @@ img {
 `;
 
 const TorrentFile = ({ torrent, file }) => `
-    <li class="">
-            ${file.progress}% - ${file.name} 
-            <button class="btn btn-secondary btn-sm mx-sm-3 " onclick="fileset('start','${torrent.infoHash}','${file.index}')">Start</button>
-            <button class="btn btn-secondary btn-sm mx-sm-3 " onclick="fileset('stop','${torrent.infoHash}','${file.index}')">Stop</button>
-    </li>
+    <li class="list-group-item">
+                        ${file.progress}% - ${file.name} 
+                        <div class="row"> 
+                            <button class="btn btn-secondary btn-sm mx-sm-3"  onclick="fileset('start','${torrent.infoHash}','${file.index}')">Start</button>
+                            <button class="btn btn-secondary btn-sm mx-sm-3 " onclick="fileset('stop','${torrent.infoHash}','${file.index}')">Stop</button>
+                        </div>
+                </li>
 `;
 const FileItemAndroid = ({ file }) => `
     <li class="">
@@ -152,6 +158,17 @@ const FileItemDownload = ({ file }) => `
             <a href="${file.url}">${file.name}</a>
     </li>
 `;
+
+
+var expanded_files = false;
+function expand_files(){
+    if (expanded_files){
+        expanded_files = false
+    }else{
+        expanded_files = true
+    }
+    updateinfo()
+}
 
 
 function fileset(cmd,hash,file){
@@ -244,6 +261,16 @@ function updateinfo(){
                             $('#'+torrent.infoHash+'-files').append(itemBlock)
                         })
                         
+                    });
+
+                    data.torrentsInfo.forEach((torrent)=>{
+                        if (expanded_files){
+                            //$('#'+torrent.infoHash+'-files').removeClass('show')
+                            $('#'+torrent.infoHash+'-files').addClass('show')
+                        }else{
+                            $('#'+torrent.infoHash+'-files').removeClass('show')
+                        }
+                       
                     });
 
                     $("#filediv").empty();
