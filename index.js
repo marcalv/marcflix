@@ -22,7 +22,7 @@ const uptime_api_key = process.env.UPTIME_KEY
 const uptime_id = process.env.UTPIME_ID
 const bot_token = process.env.BOT_TOKEN
 const DEBUG = (process.env.DEBUG || 'missing debug env var' == "True") ? true : false
-const HOSTNAME = process.env.HOSTNAME || 'http://miair.lan:8000';
+const HOSTNAME = process.env.HOSTNAME || process.env.DEBUG_HOSTNAME;
 
 //================================================================================
 //WEBSERVER SETUP 
@@ -474,7 +474,7 @@ function makeLinks(torrentsInfo){
       if (isVideo(path.basename(file.path))){
         fileObj = 
           { name: path.basename(file.path),
-            url: HOSTNAME+'/api/'+torrent.infoHash+'/'+index+'/'+path.basename(file.path)+path.extname(file.path)
+            url: HOSTNAME+'/api/'+torrent.infoHash+'/'+index+'/'+path.basename(file.path).replace(/ /g, '')+path.extname(file.path)
           }
           filesObj.push(fileObj)
       }
