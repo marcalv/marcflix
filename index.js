@@ -47,55 +47,49 @@ console.log("======================================")
 //================================================================================
 //TELEGRAM BOT
 //================================================================================
+if (bot_token)
+{
+  const Telegraf = require('telegraf')
+  const Extra = require('telegraf/extra')
+  const Markup = require('telegraf/markup')
 
-const Telegraf = require('telegraf')
-const Extra = require('telegraf/extra')
-const Markup = require('telegraf/markup')
+  const bot = new Telegraf(bot_token)
 
-const bot = new Telegraf(bot_token)
+  const keyboard = Markup.inlineKeyboard([
+      Markup.urlButton('Open MarcFlix', HOSTNAME)
+      ])
 
-const keyboard = Markup.inlineKeyboard([
-     Markup.urlButton('Open MarcFlix', HOSTNAME)
-    ])
+  bot.start((ctx) => ctx.reply('Hello'))
+  bot.help((ctx) => ctx.reply('Help message'))
+  bot.on('message', (ctx) => {
+    console.log('Message from '+ctx.message.from.username+' '+ctx.message.from.id)
 
-bot.start((ctx) => ctx.reply('Hello'))
-bot.help((ctx) => ctx.reply('Help message'))
-bot.on('message', (ctx) => {
-  console.log('Message from '+ctx.message.from.username+' '+ctx.message.from.id)
-
-  if (ctx.message.from.id == '6663869'){
-    if (ctx.message.text.match(/magnet:\?xt=urn:[a-z0-9]+:[a-z0-9]{32}/i) != null){
-      console.log('is magnet')
-      torrent = parseTorrent(ctx.message.text)
-      // keyboard = Markup.inlineKeyboard([
-      //   Markup.urlButton('Open MarcFlix', HOSTNAME),
-      //   Markup.callbackButton('ReSend','asdf'),
-      //   Markup.button(ctx.message.text)
-      // ])
-      //console.log(ctx.message)
-      ctx.reply(torrent.dn,Extra.markup(keyboard),true)
-      addTorrent(ctx.message.text)
-    }else{
-      console.log('not magnet')
-      ctx.reply('not magnet')
+    if (ctx.message.from.id == '6663869'){
+      if (ctx.message.text.match(/magnet:\?xt=urn:[a-z0-9]+:[a-z0-9]{32}/i) != null){
+        console.log('is magnet')
+        torrent = parseTorrent(ctx.message.text)
+        // keyboard = Markup.inlineKeyboard([
+        //   Markup.urlButton('Open MarcFlix', HOSTNAME),
+        //   Markup.callbackButton('ReSend','asdf'),
+        //   Markup.button(ctx.message.text)
+        // ])
+        //console.log(ctx.message)
+        ctx.reply(torrent.dn,Extra.markup(keyboard),true)
+        addTorrent(ctx.message.text)
+      }else{
+        console.log('not magnet')
+        ctx.reply('not magnet')
+      }
     }
-  }
-})
+  })
 
-bot.on('callback_query', (ctx) => {
-  ctx.answerCbQuery()
-  console.log(ctx.callbackQuery.data)
-  //addTorrent(ctx.message.text)
-})
+  bot.on('callback_query', (ctx) => {
+    ctx.answerCbQuery()
+    console.log(ctx.callbackQuery.data)
+    //addTorrent(ctx.message.text)
+  })
+}
 
-
-
-if (DEBUG) {
-  bot.launch()
-}else{
-  app.use(bot.webhookCallback('/secret-path'))
-  bot.telegram.setWebhook('https://tormarc.herokuapp.com/secret-path')
-} 
 
 //================================================================================
 //Torrent
@@ -291,7 +285,7 @@ app.get('/api/file/start/:infoHash/:index', (req,res) => {
 })  
 
 app.get('/api/file/stop/:infoHash/:index', (req,res) => {
-  console.log("Get at /api/file/start/"+req.params.infoHash+"/"+req.params.index)
+  console.log("Get at /api/file/stop/"+req.params.infoHash+"/"+req.params.index)
   let infoHash = req.params.infoHash
   let index = req.params.index
   torrent=client.get(infoHash)

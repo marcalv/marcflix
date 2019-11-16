@@ -116,9 +116,9 @@ img {
 <script>
     const TorrentItem = ({ torrent }) => `
     <li id="${torrent.infoHash}" class="">
-            ${torrent.progress}% - ${torrent.downloadSpeed}/s  - ${torrent.name} 
-            <a class="btn btn-danger btn-sm mx-sm-3 " href="/api/delete/${torrent.infoHash}">Delete</a>
-            <a class="btn btn-secondary btn-sm mx-sm-3 " href="/api2/file/stopall/${torrent.infoHash}">Stop All</a>
+            ${torrent.progress}% - ${torrent.downloadSpeed}/s - ${torrent.numPeers} - ${torrent.name} 
+            <button class="btn btn-danger btn-sm mx-sm-3 " onclick="deletetorrent('${torrent.infoHash}')">Delete</button>
+            <button class="btn btn-secondary btn-sm mx-sm-3 " onclick="stopall('${torrent.infoHash}')">Stop All</button>
             
             <ul id="${torrent.infoHash}-files" class="files">
                 
@@ -131,12 +131,10 @@ img {
 const TorrentFile = ({ torrent, file }) => `
     <li class="">
             ${file.progress}% - ${file.name} 
-            <a class="btn btn-secondary btn-sm mx-sm-3 " href="/api/file/start/${torrent.infoHash}/${file.index} ">Start</a>
-            <a class="btn btn-secondary btn-sm mx-sm-3 " href="/api/file/stop/${torrent.infoHash}/${file.index}">Stop</a>
-           
+            <button class="btn btn-secondary btn-sm mx-sm-3 " onclick="fileset('start','${torrent.infoHash}','${file.index}')">Start</button>
+            <button class="btn btn-secondary btn-sm mx-sm-3 " onclick="fileset('stop','${torrent.infoHash}','${file.index}')">Stop</button>
     </li>
 `;
-
 const FileItemAndroid = ({ file }) => `
     <li class="">
             <a href=intent://${file.url.replace("http://","").replace("https://","")}#Intent;scheme=http;type=video/*;end ">${file.name}</a>
@@ -154,6 +152,22 @@ const FileItemDownload = ({ file }) => `
             <a href="${file.url}">${file.name}</a>
     </li>
 `;
+
+
+function fileset(cmd,hash,file){
+    console.log('entered in fileset with: '+cmd+hash+' '+file)
+    $.get('/api/file/'+cmd+'/'+hash+'/'+file, (res)=>{})
+}
+
+function deletetorrent(hash){
+    console.log('entered in deletetorrent with: '+hash)
+    $.get('/api/delete/'+hash, (res)=>{})
+}
+
+function stopall(hash){
+    console.log('entered in stopall with: '+hash)
+    $.get('/api2/file/stopall/'+hash, (res)=>{})
+}
 
 updateinfo()
 var count = 0;
