@@ -458,7 +458,7 @@ function getRSS(infoObj) {
         if (isVideo(path.basename(file.path))){
           line = '#EXTINF:-1, '+path.basename(file.path)+'\n'
           m3u8Content=m3u8Content.concat(line)
-          line = HOSTNAME+'/api/'+torrent.infoHash+'/'+index+'/file'+path.extname(file.path)+'\n'
+          line = HOSTNAME+'/api/'+torrent.infoHash+'/'+file.index+'/file'+path.extname(file.path)+'\n'
           m3u8Content=m3u8Content.concat(line)
         }
         
@@ -477,7 +477,7 @@ function makeLinks(torrentsInfo){
       if (isVideo(path.basename(file.path))){
         fileObj = 
           { name: path.basename(file.path),
-            url: HOSTNAME+'/api/'+torrent.infoHash+'/'+index+'/'+path.basename(file.path).replace(/ /g, '')+path.extname(file.path)
+            url: HOSTNAME+'/api/'+torrent.infoHash+'/'+file.index+'/'+path.basename(file.path).replace(/ /g, '')+path.extname(file.path)
           }
           filesObj.push(fileObj)
       }
