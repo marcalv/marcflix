@@ -133,12 +133,11 @@ img {
 `;
 
 const TorrentFile = ({ torrent, file }) => `
-    <li class="list-group-item">
+    <li class="list-group-item">     
                         ${file.progress}% - ${file.name} 
-                        <div class="row"> 
-                            <button class="btn btn-secondary btn-sm mx-sm-3"  onclick="fileset('start','${torrent.infoHash}','${file.index}')">Start</button>
-                            <button class="btn btn-secondary btn-sm mx-sm-3 " onclick="fileset('stop','${torrent.infoHash}','${file.index}')">Stop</button>
-                        </div>
+                        <br> 
+                        <button class="btn btn-secondary btn-sm mx-sm-3"  onclick="fileset('start','${torrent.infoHash}','${file.index}')">Start</button>
+                        <button class="btn btn-secondary btn-sm mx-sm-3 " onclick="fileset('stop','${torrent.infoHash}','${file.index}')">Stop</button>     
                 </li>
 `;
 const FileItemAndroid = ({ file }) => `
@@ -160,10 +159,10 @@ const FileItemDownload = ({ file }) => `
 `;
 
 
-var expanded_files = false;
+var expanded_files = true;   //CHANGE TO FALSE WHEN SESSION REMEMBERS THIS SETTING
 function expand_files(){
     if (expanded_files){
-        expanded_files = false
+        expanded_files = false        
     }else{
         expanded_files = true
     }
@@ -174,16 +173,19 @@ function expand_files(){
 function fileset(cmd,hash,file){
     console.log('entered in fileset with: '+cmd+hash+' '+file)
     $.get('/api/file/'+cmd+'/'+hash+'/'+file, (res)=>{})
+    updateinfo()
 }
 
 function deletetorrent(hash){
     console.log('entered in deletetorrent with: '+hash)
     $.get('/api/delete/'+hash, (res)=>{})
+    updateinfo()
 }
 
 function stopall(hash){
     console.log('entered in stopall with: '+hash)
     $.get('/api2/file/stopall/'+hash, (res)=>{})
+    updateinfo()
 }
 
 updateinfo()

@@ -371,9 +371,19 @@ function getTorrents(){
         }
         files.push(fileObj)
       })
-    torrentObject.files = files
+      files_sorted = files.sort(function(a, b) {
+        var textA = a.name.toUpperCase();
+        var textB = b.name.toUpperCase();
+        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+    });
+    
+    
+    torrentObject.files = files_sorted
     torrentSummary.push(torrentObject)
   })
+
+  
+  
   return torrentSummary
 }
 
@@ -387,7 +397,6 @@ function getInfo() {
       infoObj.torrentsInfo = getTorrents()
       infoObj.files = values[1]
       infoObj.links = makeLinks(infoObj.torrentsInfo)
-      
       resolve(infoObj)
     });  
 });
