@@ -375,7 +375,12 @@ function getTorrents(){
         var textA = a.name.toUpperCase();
         var textB = b.name.toUpperCase();
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-    });
+        });
+        files_sorted2 = files_sorted.sort(function(a, b) {
+          var textA = a.name.split('.').pop().toUpperCase();
+          var textB = b.name.split('.').pop().toUpperCase();
+          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+          });
     
     
     torrentObject.files = files_sorted
