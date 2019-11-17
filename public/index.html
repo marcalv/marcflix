@@ -134,7 +134,7 @@ img {
 
 const TorrentFile = ({ torrent, file }) => `
     <li class="list-group-item">     
-                        ${file.progress}% - ${file.name} 
+                        ${file.progress}% - ${file.name.replace(/\./g,' ')} 
                         <br> 
                         <button class="btn btn-secondary btn-sm mx-sm-3"  onclick="fileset('start','${torrent.infoHash}','${file.index}')">Start</button>
                         <button class="btn btn-secondary btn-sm mx-sm-3 " onclick="fileset('stop','${torrent.infoHash}','${file.index}')">Stop</button>     
