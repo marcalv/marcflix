@@ -88,7 +88,15 @@ if (bot_token)
     console.log(ctx.callbackQuery.data)
     //addTorrent(ctx.message.text)
   })
+
+  if (DEBUG) {
+    bot.launch()
+  }else{
+    app.use(bot.webhookCallback('/secret-path'))
+    bot.telegram.setWebhook(HOSTNAME+'/secret-path')
+  } 
 }
+
 
 
 //================================================================================
