@@ -19,12 +19,7 @@
   
       "UTPIME_ID": {
         "description": "OPTIONAL. UptimeRobot monitor id pointing to this app.",
-        "value": "True"},
-  
+        "value": "True"}
 
-
-    "scripts":
-      {
-        "postdeploy":"./postdeploy.sh"
-      }
   }
+}
