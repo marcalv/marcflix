@@ -6,20 +6,20 @@
     "success_url":"/",
     "env":{
       "HOSTNAME": {
-        "description": "Domain used. Example: If App name is 'mylocation', your domain is 'mylocation.herokuapp.com'",
+        "description": "Domain used. Example: If App name is 'myflix', your domain is 'myflix.herokuapp.com'",
         "value": "YOUR_APP_NAME.herokuapp.com"},
   
       "BOT_TOKEN": {
         "description": "OPTIONAL. Telegram bot token.",
-        "value": "1"},
+        "required": "false"},
   
       "UPTIME_KEY": {
         "description": "OPTIONAL. UptimeRobot API key.",
-        "value": "False"},
+        "required": "false"},
   
       "UTPIME_ID": {
         "description": "OPTIONAL. UptimeRobot monitor id pointing to this app.",
-        "value": "True"}
+        "required": "false"}
 
   }
 }
