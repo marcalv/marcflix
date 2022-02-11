@@ -16,7 +16,7 @@
     "check-disk-space": "^2.1.0",
     "cloudscraper": "^4.5.0",
     "express": "^4.17.1",
-    "express-handlebars": "^3.1.0",
+    "express-handlebars": "^5.3.1",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
     "is-video": "^1.0.1",
